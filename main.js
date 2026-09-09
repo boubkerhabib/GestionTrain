@@ -206,7 +206,7 @@ do{
 
 
     `)
-    var choix = Number(prompt('========>  '));
+    var choix = Number(prompt('Votre choix :  '));
     switch(choix){
         case 1: 
                     afficherTrajets();
@@ -256,6 +256,19 @@ function quitter(){
 }
 
 function afficherTrajets(){
+    console.log("=== TRAJETS DISPONIBLES ===");
+    for (let i = 0;i < trips.length;i++){
+        console.log(`
+            
+                #${trips[i].id} ${trips[i].departure} → ${trips[i].destination}
+                Départ : ${trips[i].departureTime} 
+                Arrivée : ${trips[i].arrivalTime }
+                Prix : ${trips[i].price}
+                Places disponibles : ${trips[i].availableSeats}
+
+        `)
+
+    }
     
 }
 
