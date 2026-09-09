@@ -181,8 +181,9 @@ const trips = [
         availableSeats: 50
     }
 ];
+
 let tickets = [];
-const idTicks=0 ;
+const idTicks = 0 ;
 const seatNumber = 0;
 
 let prompt = require("prompt-sync")();
@@ -200,7 +201,6 @@ do{
                 5. Rechercher un ticket
                 6. Filtrer les trajets
                 7. Trier les trajets
-                8. Statustique
                 0. Quitter
 
 
@@ -259,7 +259,7 @@ function afficherTrajets(){
     console.log("=== TRAJETS DISPONIBLES ===");
     for (let i = 0;i < trips.length;i++){
         console.log(`
-            
+
                 #${trips[i].id} ${trips[i].departure} → ${trips[i].destination}
                 Départ : ${trips[i].departureTime} 
                 Arrivée : ${trips[i].arrivalTime }
@@ -273,6 +273,45 @@ function afficherTrajets(){
 }
 
 function  AcheterTicket(){
+    for (let i = 0;i < trips.length;i++){
+        console.log(`   
+                #${trips[i].id} ${trips[i].departure} → ${trips[i].destination} Prix : ${trips[i].price}:
+        `)
+
+    }
+    let choixIdTrips;
+    let userName;
+    
+    do{
+        userName = String(prompt("entrez votre name : "));
+        choixIdTrips = Number(prompt("entrez nomber de traget : "));
+        if (choixIdTrips < 1 || choixIdTrips > 20){
+            console.log("le nomber de traget est invalid :");
+        }else if(userName.length <= 2){
+            console.log("le name est invalid :");
+        }else if(trips[choixIdTrips-1].availableSeats > 0){
+            console.log("il y un place");
+
+        }else if(trips[choixIdTrips-1].availableSeats <= 0){
+            console.log("iln'y pas un place");
+
+        }
+
+    }while(choixIdTrips > 20 || choixIdTrips < 1 || userName.length <= 2 || trips[choixIdTrips-1].availableSeats <= 0);
+    const n = 51 - trips[choixIdTrips-1].availableSeats;
+    tickets.push({
+        id : choixIdTrips ,
+        name : userName,
+        idTicks : tickets.length+1 ,
+        prix : trips[choixIdTrips-1].price ,
+        seatNumber : n
+
+    });
+    trips[choixIdTrips-1].availableSeats--;
+    
+
+}
+function afficherTickets(){
 
 }
 function AnnulerTicket(){
