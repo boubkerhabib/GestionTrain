@@ -312,7 +312,16 @@ function  AcheterTicket(){
 
 }
 function afficherTickets(){
-
+    for (let i = 0;i < tickets.length;i++){
+        console.log(`
+            #idTickets:${tickets[i].idTicks}:
+            #tripId:${tickets[i].id}:
+            passengerName: ${tickets[i].name}:
+            prix : ${tickets[i].prix}:
+            place : ${tickets[i].seatNumber}:
+    
+        `)
+    }
 
 }
 function AnnulerTicket(){
