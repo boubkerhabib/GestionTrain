@@ -1,4 +1,3 @@
-
 const trips = [
     {
         id: 1,
@@ -7,7 +6,7 @@ const trips = [
         departureTime: "07:30",
         arrivalTime: "08:30",
         price: 25,
-        availableSeats: 5
+        availableSeats: 50
     },
     {
         id: 2,
@@ -181,13 +180,14 @@ const trips = [
         availableSeats: 50
     }
 ];
-let nextTicketId = 1;
+
+let prochainIdTicket = 1;
 const tickets = [];
-const idTicks = 0 ;
-const seatNumber = 0;
 
 let prompt = require("prompt-sync")();
-do{
+let choix;
+
+do {
     console.log(`
 
                 =================================
@@ -206,169 +206,198 @@ do{
 
 
     `)
-    var choix = Number(prompt('Votre choix :  '));
-    switch(choix){
-        case 1: 
-                    afficherTrajets();
-                    break;
-        case 2: 
-                    AcheterTicket();
-                    break;
-        case 3: 
-                    afficherTickets();
-                    break;
-        case 4: 
-                    AnnulerTicket();
-                    break;
-        case 5: 
-                    RechercherTicket();
-                    break;
-
-
-        case 6: 
-                    filtrerTrajets();
-                    break;
-        case 7: 
-                    trierTrajets();
-                    break;
-
-        case 0: 
-                    quitter();
-                    break;
-        default: 
-                    console.log("pardon! votre choix n'est pas valide");
-                    break;
-
-
-            
-               
-
-
-
-
+    choix = Number(prompt('Votre choix :  '));
+    switch (choix) {
+        case 1:
+            afficherTrajets();
+            break;
+        case 2:
+            acheterTicket();
+            break;
+        case 3:
+            afficherTickets();
+            break;
+        case 4:
+            annulerTicket();
+            break;
+        case 5:
+            rechercherTicket();
+            break;
+        case 6:
+            filtrerTrajets();
+            break;
+        case 7:
+            trierTrajets();
+            break;
+        case 0:
+            quitter();
+            break;
+        default:
+            console.log("pardon! votre choix n'est pas valide");
+            break;
     }
 
-}while (choix !== 0);
+} while (choix !== 0);
 
 
-function quitter(){
+function quitter() {
     console.log("merci pour votre visite");
 }
 
-function afficherTrajets(){
+function afficherTrajets() {
     console.log("=== TRAJETS DISPONIBLES ===");
-    for (let i = 0;i < trips.length;i++){
+    for (let i = 0; i < trips.length; i++) {
         console.log(`
 
                 #${trips[i].id} ${trips[i].departure} → ${trips[i].destination}
                 Départ : ${trips[i].departureTime} 
-                Arrivée : ${trips[i].arrivalTime }
+                Arrivée : ${trips[i].arrivalTime}
                 Prix : ${trips[i].price}
                 Places disponibles : ${trips[i].availableSeats}
 
         `)
-
     }
-    
 }
 
-function AcheterTicket(){
-    for (let i = 0;i < trips.length;i++){
+function acheterTicket() {
+    let numeroPlace = 1;
+    for (let i = 0; i < trips.length; i++) {
         console.log(`   
                 #${trips[i].id} ${trips[i].departure} → ${trips[i].destination} Prix : ${trips[i].price}:
         `)
     }
-    let choixIdTrips;
-    let userName;
 
-    do{
-        userName = String(prompt("entrez votre name : "));
-        choixIdTrips = Number(prompt("entrez nomber de traget : "));
-        if (choixIdTrips < 1 || choixIdTrips > 20){
-            console.log("le nomber de traget est invalid :");
-        }else if(userName.length <= 2){
-            console.log("le name est invalid :");
-        }else if(trips[choixIdTrips-1].availableSeats > 0){
-            console.log("il y un place");
-        }else if(trips[choixIdTrips-1].availableSeats <= 0){
-            console.log("iln'y pas un place");
-        }
-    }while(choixIdTrips > 20 || choixIdTrips < 1 || userName.length <= 2 || trips[choixIdTrips-1].availableSeats <= 0);
+    let choixIdTrajet;
+    let nomPassager;
 
-    let seatNumber = 1;
-    let placeTrouvee;
     do {
-        placeTrouvee = false;
-        for (let i = 0; i < tickets.length; i++){
-            if (tickets[i].id === choixIdTrips && tickets[i].seatNumber === seatNumber){
-                placeTrouvee = true;
-                break;
-            }
+
+        nomPassager = String(prompt("Entrez votre nom : "));
+        choixIdTrajet = Number(prompt("Entrez numéro de trajet : "));
+
+        if (choixIdTrajet < 1 || choixIdTrajet > 20) {
+
+            console.log("Le numero de trajet est invalide.");
+
+        } else if (nomPassager.length <= 2) {
+
+            console.log("Le nom est invalide.");
+
+        } else if (trips[choixIdTrajet - 1].availableSeats > 0) {
+
+            console.log("Il y a une place.");
+
+        } else {
+
+            console.log("Il n'y a pas de place.");
         }
-        if (placeTrouvee){
-            seatNumber++;
-        }
-    } while (placeTrouvee);
+
+    } while (
+        choixIdTrajet < 1 ||
+        choixIdTrajet > 20 ||
+        nomPassager.length <= 2 ||
+        (choixIdTrajet >= 1 && choixIdTrajet <= 20 &&
+            trips[choixIdTrajet - 1].availableSeats <= 0)
+    );
+
+    numeroPlace = 51 - trips[choixIdTrajet].availableSeats; 
+
 
     tickets.push({
-        id : choixIdTrips,
-        name : userName,
-        idTicks : nextTicketId,
-        prix : trips[choixIdTrips-1].price,
-        seatNumber : seatNumber
+        idTicket: prochainIdTicket,
+        idTrajet: choixIdTrajet,
+        nomPassager: nomPassager,
+        prix: trips[choixIdTrajet - 1].price,
+        numeroPlace: numeroPlace
     });
 
-    nextTicketId++;
-    trips[choixIdTrips-1].availableSeats--;
+    prochainIdTicket++;
+    trips[choixIdTrajet - 1].availableSeats--;
+
+    console.log("Ticket acheté avec succès.");
 }
-function afficherTickets(){
-    for (let i = 0;i < tickets.length;i++){
-        console.log(`
-            #idTickets:${tickets[i].idTicks}:
-            #tripId:${tickets[i].id}:
-            passengerName: ${tickets[i].name}:
-            prix : ${tickets[i].prix}:
-            place : ${tickets[i].seatNumber}:
-    
-        `)
+
+function afficherTickets() {
+    console.log("=== TICKETS ===");
+    if (tickets.length === 0) {
+        console.log("Aucun ticket achete pour le moment.");
+        return;
     }
-
+    for (let i = 0; i < tickets.length; i++) {
+        const trajet = trips[tickets[i].idTrajet - 1];
+        console.log(`
+                        Ticket #${tickets[i].idTicket}
+                        Passager : ${tickets[i].nomPassager}
+                        Trajet : ${trajet.departure} → ${trajet.destination}
+                        Place : ${tickets[i].numeroPlace}
+                        Prix : ${tickets[i].prix} DH
+        `);
+    }
 }
+//=====================================================================================
 
 
-
-function AnnulerTicket(){
-    let choixIdTickits = Number(prompt("entrez le nomber de tickit : "));
-    let indexIdTichits = -1;
-    for (let i = 0;i < tickets.length;i++){
-        if (tickets[i].idTicks === choixIdTickits){
-            indexIdTichits = i;
+function annulerTicket() {
+    let choixIdTicket = Number(prompt("entrez le numéro de ticket : "));
+    let indexTicket = -1;
+    for (let i = 0; i < tickets.length; i++) {
+        if (tickets[i].idTicket === choixIdTicket) {
+            indexTicket = i;
             break;
         }
     }
-    if (indexIdTichits === -1){
-        console.log("id de tickets est invalid :");
+    if (indexTicket === -1) {
+        console.log("id de ticket invalide.");
         return;
     }
-    let idTrajetAnnule = tickets[indexIdTichits].id;
-    tickets.splice(indexIdTichits, 1);
-    for (let i = 0;i < trips.length;i++){
-        if (trips[i].id === idTrajetAnnule){
+    let idTrajetAnnule = tickets[indexTicket].idTrajet;
+    tickets.splice(indexTicket, 1);
+    for (let i = 0; i < trips.length; i++) {
+        if (trips[i].id === idTrajetAnnule) {
             trips[i].availableSeats++;
             break;
         }
     }
-    console.log("Ticket annule avec succes.");
+    console.log("Ticket annulé avec succès.");
 }
 
-function RechercherTicket(){
+function rechercherTicket() {
+
+    let nom = String(prompt("Entrez le nom du passager : "));
+
+    let trouve = false;
+
+    for (let i = 0; i < tickets.length; i++) {
+
+        if (tickets[i].nomPassager === nom) {
+
+            trouve = true;
+
+            const trajet = trips[tickets[i].idTrajet - 1];
+
+            console.log(`
+                            Ticket #${tickets[i].idTicket}
+                            Passager : ${tickets[i].nomPassager}
+                            Trajet : ${trajet.departure} → ${trajet.destination}
+                            Place : ${tickets[i].numeroPlace}
+                            Prix : ${tickets[i].prix} DH
+            `);
+        }
+    }
+
+    if (trouve === false) {
+        console.log("Aucun ticket trouve pour ce passager.");
+    }
+}
+
+
+
+function filtrerTrajets() {
+
 
 }
 
-function filtrerTrajets(){
+function trierTrajets() {
 
+    
 }
-function trierTrajets(){
-
-}
-
