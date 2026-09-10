@@ -6,7 +6,7 @@ const trips = [
         departureTime: "07:30",
         arrivalTime: "08:30",
         price: 25,
-        availableSeats: 50
+        availableSeats: 5
     },
     {
         id: 2,
@@ -185,7 +185,6 @@ let prochainIdTicket = 1;
 const tickets = [];
 
 let prompt = require("prompt-sync")();
-let choix;
 
 do {
     console.log(`
@@ -206,7 +205,7 @@ do {
 
 
     `)
-    choix = Number(prompt('Votre choix :  '));
+    var choix = Number(prompt('Votre choix :  '));
     switch (choix) {
         case 1:
             afficherTrajets();
@@ -250,8 +249,8 @@ function afficherTrajets() {
         console.log(`
 
                 #${trips[i].id} ${trips[i].departure} → ${trips[i].destination}
-                Départ : ${trips[i].departureTime} 
-                Arrivée : ${trips[i].arrivalTime}
+                Depart : ${trips[i].departureTime} 
+                Arrivee : ${trips[i].arrivalTime}
                 Prix : ${trips[i].price}
                 Places disponibles : ${trips[i].availableSeats}
 
@@ -260,7 +259,7 @@ function afficherTrajets() {
 }
 
 function acheterTicket() {
-    let numeroPlace = 1;
+
     for (let i = 0; i < trips.length; i++) {
         console.log(`   
                 #${trips[i].id} ${trips[i].departure} → ${trips[i].destination} Prix : ${trips[i].price}:
@@ -300,8 +299,22 @@ function acheterTicket() {
             trips[choixIdTrajet - 1].availableSeats <= 0)
     );
 
-    numeroPlace = 51 - trips[choixIdTrajet-1].availableSeats; 
 
+    let numeroPlace = 1;
+    let placePrise;
+    do {
+        placePrise = false;
+        for (let i = 0; i < tickets.length; i++) {
+            if (tickets[i].idTrajet === choixIdTrajet && tickets[i].numeroPlace === numeroPlace) {
+                placePrise = true;
+                break;
+            }
+        }
+        if (placePrise) {
+            numeroPlace++;
+        }
+
+    } while (placePrise);
 
     tickets.push({
         idTicket: prochainIdTicket,
@@ -314,13 +327,13 @@ function acheterTicket() {
     prochainIdTicket++;
     trips[choixIdTrajet - 1].availableSeats--;
 
-    console.log("Ticket acheté avec succès.");
+    console.log("Ticket achete avec succes.");
 }
 
 function afficherTickets() {
     console.log("=== TICKETS ===");
     if (tickets.length === 0) {
-        console.log("Aucun ticket achete pour le moment.");
+        console.log("Aucun ticket acheté pour le moment.");
         return;
     }
     for (let i = 0; i < tickets.length; i++) {
@@ -334,7 +347,7 @@ function afficherTickets() {
         `);
     }
 }
-
+//=====================================================================================
 
 
 function annulerTicket() {
@@ -386,40 +399,37 @@ function rechercherTicket() {
     }
 
     if (trouve === false) {
-        console.log("Aucun ticket trouve pour ce passager.");
+        console.log("Aucun ticket trouvé pour ce passager.");
     }
 }
-
 
 
 function filtrerTrajets() {
 
-    let ville = String(prompt("Entrez la ville de depart : ")).toLowerCase();
+    let ville = String(prompt("entrez la ville de depart : "));
 
-    let villeTrouve = [];
+    let trouve = false;
 
-    for (let i = 0; i < trips.length; i++) {
+    for (let i = 0; i < tickets.length; i++) {
 
-        if (trips[i].departure.toLowerCase().includes(ville)) {
+        if (trips[i].departure === ville) {
 
-            villeTrouve.push(trips[i]);
+            trouve = true;
+
+            console.log(`
+                    ${trips[i].departure} → ${trips[i].destination}
+                    Départ : ${trips[i].departureTime}
+                    Arrivée : ${trips[i].arrivalTime}
+                    Prix : ${trips[i].price} DH
+                    Places disponibles : ${trips[i].availableSeats}
+            `);
         }
     }
 
-    if (villeTrouve.length === 0) {
-        console.log("Aucun trajet trouvé.");
-        return;
+    if (trouve === false) {
+        console.log("Aucun trajet trouve.");
     }
-
-    for (let i = 0; i < villeTrouve.length; i++) {
-        console.log(`
-                ${villeTrouve[i].departure} → ${villeTrouve[i].destination} : ${villeTrouve[i].price} DH
-        `);
-    }
-
 }
-
-
 
 function trierTrajets() {
 
@@ -427,7 +437,7 @@ function trierTrajets() {
 
         for (let j = 0; j < trips.length - 1 - i; j++) {
 
-            if (trips[j+1].price > trips[j].price) {
+            if (trips[j].price > trips[j + 1].price) {
 
                 let temp = trips[j];
                 trips[j] = trips[j + 1];
