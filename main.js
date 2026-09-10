@@ -334,7 +334,7 @@ function afficherTickets() {
         `);
     }
 }
-//=====================================================================================
+
 
 
 function annulerTicket() {
@@ -420,7 +420,31 @@ function filtrerTrajets() {
 }
 
 
+
 function trierTrajets() {
 
-    
+    for (let i = 0; i < trips.length - 1; i++) {
+
+        for (let j = 0; j < trips.length - 1 - i; j++) {
+
+            if (trips[j+1].price > trips[j].price) {
+
+                let temp = trips[j];
+                trips[j] = trips[j + 1];
+                trips[j + 1] = temp;
+
+            }
+        }
+    }
+
+    console.log("=== TRAJETS TRIES PAR PRIX ===");
+
+    for (let i = 0; i < trips.length; i++) {
+
+        console.log(`
+                        #${trips[i].id} ${trips[i].departure} → ${trips[i].destination}
+                        Prix : ${trips[i].price} DH
+        `);
+
+    }
 }
