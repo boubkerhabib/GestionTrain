@@ -300,7 +300,7 @@ function acheterTicket() {
             trips[choixIdTrajet - 1].availableSeats <= 0)
     );
 
-    numeroPlace = 51 - trips[choixIdTrajet].availableSeats; 
+    numeroPlace = 51 - trips[choixIdTrajet-1].availableSeats; 
 
 
     tickets.push({
@@ -394,8 +394,31 @@ function rechercherTicket() {
 
 function filtrerTrajets() {
 
+    let ville = String(prompt("Entrez la ville de depart : ")).toLowerCase();
+
+    let villeTrouve = [];
+
+    for (let i = 0; i < trips.length; i++) {
+
+        if (trips[i].departure.toLowerCase().includes(ville)) {
+
+            villeTrouve.push(trips[i]);
+        }
+    }
+
+    if (villeTrouve.length === 0) {
+        console.log("Aucun trajet trouvé.");
+        return;
+    }
+
+    for (let i = 0; i < villeTrouve.length; i++) {
+        console.log(`
+                ${villeTrouve[i].departure} → ${villeTrouve[i].destination} : ${villeTrouve[i].price} DH
+        `);
+    }
 
 }
+
 
 function trierTrajets() {
 
